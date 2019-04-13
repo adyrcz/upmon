@@ -1,0 +1,42 @@
+# Welcome to Smoke Detector!
+#
+# This tool is for monitoring uptime. Self Hosted Pingdom!  Freedom!!!!
+#
+# Happy Monitoring!
+---
+service: smoke-detector
+
+provider:
+  name: aws
+  runtime: python3.7
+  timeout: 5
+  apiKeys:
+    - smoke-detector-api-key
+  stage: dev
+  region: eu-west-1
+
+custom:
+
+package:
+  exclude:
+    - env/**
+
+functions:
+  smoke-detector:
+    handler: smoke-detector.check
+    events:
+      - schedule:
+        rate: rate(1 minute)
+        input:
+          website: https://linkfire.com
+#      - http:
+#          path: check
+#          method: get
+#          request:
+#            parameters:
+#              querystrings:
+#                website: true
+        private: true
+
+plugins:
+  - serverless-python-requirements
